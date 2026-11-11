@@ -1,0 +1,86 @@
+{
+  "f1_malicious": 0.6936416184971098,
+  "roc_auc": 0.9408972980722341,
+  "confusion_matrix": [
+    [
+      8497,
+      1344
+    ],
+    [
+      299,
+      1860
+    ]
+  ],
+  "report": {
+    "legitimate": {
+      "precision": 0.9660072760345612,
+      "recall": 0.8634285133624632,
+      "f1-score": 0.911842034662231,
+      "support": 9841.0
+    },
+    "malicious": {
+      "precision": 0.5805243445692884,
+      "recall": 0.8615099583140343,
+      "f1-score": 0.6936416184971098,
+      "support": 2159.0
+    },
+    "accuracy": 0.8630833333333333,
+    "macro avg": {
+      "precision": 0.7732658103019248,
+      "recall": 0.8624692358382487,
+      "f1-score": 0.8027418265796704,
+      "support": 12000.0
+    },
+    "weighted avg": {
+      "precision": 0.8966524719484341,
+      "recall": 0.8630833333333333,
+      "f1-score": 0.8725841431205229,
+      "support": 12000.0
+    }
+  },
+  "n_train": 48000,
+  "n_test": 12000,
+  "dataset_records": 420464,
+  "top_features": [
+    {
+      "feature": "path_length",
+      "importance": 0.12142339204510107
+    },
+    {
+      "feature": "num_hyphens",
+      "importance": 0.11337873863363053
+    },
+    {
+      "feature": "num_digits",
+      "importance": 0.09329455623228863
+    },
+    {
+      "feature": "suspicious_word_count",
+      "importance": 0.09252644918504131
+    },
+    {
+      "feature": "num_slash",
+      "importance": 0.08257306902827445
+    },
+    {
+      "feature": "num_dots",
+      "importance": 0.08017827864168013
+    },
+    {
+      "feature": "digit_ratio",
+      "importance": 0.07352431748330407
+    },
+    {
+      "feature": "url_length",
+      "importance": 0.06659853968446977
+    },
+    {
+      "feature": "url_entropy",
+      "importance": 0.057470663041716545
+    },
+    {
+      "feature": "hostname_length",
+      "importance": 0.05388841457655548
+    }
+  ]
+}

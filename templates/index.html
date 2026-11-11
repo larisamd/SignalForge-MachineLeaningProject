@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b100e">
+  <title>{% if active_page == "dashboard" %}Overview{% elif active_page == "email" %}Email analyzer{% elif active_page == "urls" %}URL scanner{% elif active_page == "security" %}Security center{% else %}Model lab{% endif %} · SignalForge</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body data-page="{{ active_page }}">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="{{ url_for('index') }}">
+        <span class="brand-copy"><strong>Signal<span>Forge</span></strong><small>THREAT INTELLIGENCE</small></span>
+      </a>
+      <div class="nav-label">WORKSPACE</div>
+      <nav class="main-nav" aria-label="Main navigation">
+        <a class="nav-link {% if active_page == 'dashboard' %}active{% endif %}" href="{{ url_for('index') }}"><span class="nav-icon">◫</span>Overview</a>
+        <a class="nav-link {% if active_page == 'email' %}active{% endif %}" href="{{ url_for('email_analyzer') }}"><span class="nav-icon">✉</span>Email analyzer</a>
+        <a class="nav-link {% if active_page == 'urls' %}active{% endif %}" href="{{ url_for('url_scanner') }}"><span class="nav-icon">⌁</span>URL scanner</a>
+        <a class="nav-link {% if active_page == 'security' %}active{% endif %}" href="{{ url_for('security_center') }}"><span class="nav-icon">◇</span>Security center</a>
+        <a class="nav-link {% if active_page == 'models' %}active{% endif %}" href="{{ url_for('model_lab') }}"><span class="nav-icon">⌘</span>Model lab</a>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="system-status"><span class="status-dot"></span><span><strong>LOCAL ANALYSIS</strong><small>Models run on this machine</small></span></div>
+        <p class="sidebar-version">SIGNALFORGE <span>·</span> DEMO EDITION</p>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <div class="breadcrumb">SECURITY WORKSPACE <span>/</span> {{ {"dashboard":"OVERVIEW","email":"EMAIL ANALYZER","urls":"URL SCANNER","security":"SECURITY CENTER","models":"MODEL LAB"}[active_page] }}</div>
+        <div class="topbar-right"><span class="live-indicator"><i></i> SYSTEM READY</span><span class="avatar">SF</span></div>
+      </header>
+
+      {% if active_page == "dashboard" %}
+      <section class="page-content">
+        <div class="page-heading heading-row">
+          <div><p class="eyebrow">THREAT OPERATIONS <span> / </span> OVERVIEW</p><h1>Your security, <span>at a glance.</span></h1><p class="lead">A local-first workspace for spotting suspicious messages and risky links.</p></div>
+          <a class="button button-primary" href="{{ url_for('email_analyzer') }}">＋ &nbsp; New analysis</a>
+        </div>
+        <div class="stat-grid" id="dashboardStats">
+          <article class="stat-card"><div class="stat-top"><span>ANALYSIS ENGINES</span><span class="stat-symbol green">⌘</span></div><strong>02</strong><small>Text classifier + URL model</small></article>
+          <article class="stat-card"><div class="stat-top"><span>TRAINING CORPORA</span><span class="stat-symbol yellow">▤</span></div><strong>02</strong><small>Curated, labelled datasets</small></article>
+          <article class="stat-card"><div class="stat-top"><span>LAST SCANS</span><span class="stat-symbol green">◷</span></div><strong id="scanCount">00</strong><small>Stored in this browser only</small></article>
+          <article class="stat-card"><div class="stat-top"><span>DATA SHARING</span><span class="stat-symbol yellow">◈</span></div><strong>NONE</strong><small>No third-party threat API calls</small></article>
+        </div>
+        <div class="dashboard-grid">
+          <section class="panel quick-panel">
+            <div class="panel-heading"><div><p class="eyebrow">START HERE</p><h2>Choose an analysis</h2></div><span class="panel-index">01 — 03</span></div>
+            <a class="action-row" href="{{ url_for('email_analyzer') }}"><span class="action-icon">✉</span><span><strong>Analyze a message</strong><small>Spam probability, suspicious language and embedded links</small></span><b>→</b></a>
+            <a class="action-row" href="{{ url_for('url_scanner') }}"><span class="action-icon yellow">⌁</span><span><strong>Scan URLs</strong><small>Inspect a link or triage a list of up to 50 URLs</small></span><b>→</b></a>
+            <a class="action-row" href="{{ url_for('security_center') }}"><span class="action-icon">◇</span><span><strong>Run a password checkup</strong><small>Private, in-browser strength feedback—nothing is uploaded</small></span><b>→</b></a>
+          </section>
+          <section class="panel activity-panel">
+            <div class="panel-heading"><div><p class="eyebrow">ON THIS DEVICE</p><h2>Recent activity</h2></div><button class="text-button" id="clearHistoryBtn" type="button">Clear history</button></div>
+            <div id="recentScans" class="recent-list"><div class="empty-state"><span>◷</span><p>No scans yet</p><small>Your scan summaries will appear here, stored only in this browser.</small></div></div>
+          </section>
+        </div>
+        <div class="notice-strip"><span>i</span><p><strong>Use this as a screening aid, not a verdict.</strong> Models can make mistakes. Never enter real passwords or confidential email content into a demo environment.</p><a href="{{ url_for('model_lab') }}">View model limits →</a></div>
+      </section>
+      {% elif active_page == "email" %}
+      <section class="page-content">
+        <div class="page-heading"><p class="eyebrow">MESSAGE DEFENSE <span> / </span> ANALYZER</p><h1>Read between <span>the lines.</span></h1><p class="lead">Screen message text for spam patterns, social-engineering cues and suspicious links.</p></div>
+        <section class="panel analyzer-panel">
+          <div class="panel-heading"><div><p class="eyebrow">TEXT ANALYSIS</p><h2>Paste a message to inspect</h2></div><span class="privacy-tag"><i></i> PROCESSED LOCALLY</span></div>
+          <label class="field-label" for="emailText">MESSAGE BODY</label>
+          <textarea id="emailText" rows="9" maxlength="20000" placeholder="Paste the text of an email or message here. Any links in the message will be checked as well."></textarea>
+          <div class="form-footer"><span class="field-hint">Up to 20,000 characters · Avoid pasting confidential information</span><button class="button button-primary" id="analyzeBtn" type="button">Analyze message <span>→</span></button></div>
+          <div class="inline-error hidden" id="emailError" role="alert"></div>
+        </section>
+        <section id="analyzeResult" class="analysis-results hidden" aria-live="polite">
+          <div class="result-heading"><div><p class="eyebrow">ANALYSIS REPORT</p><h2>What we found</h2></div><span class="mono-tag" id="analysisTime"></span></div>
+          <div class="verdict-banner" id="verdictBanner"></div>
+          <div class="result-grid">
+            <article class="panel result-card"><p class="eyebrow">SPAM CLASSIFIER</p><h3 id="spamLabel">—</h3><div class="meter"><span id="spamMeter"></span></div><div class="metric-caption"><span>Spam probability</span><strong id="spamProb">—</strong></div><p class="field-hint">Trained on the SMS Spam Collection dataset.</p></article>
+            <article class="panel result-card"><p class="eyebrow">LINKS EXAMINED</p><h3><span id="urlCount">0</span> <small>found</small></h3><div id="urlList" class="url-results-list"></div></article>
+          </div>
+          <article class="panel signal-panel"><p class="eyebrow">SOCIAL-ENGINEERING CUES</p><div id="emailSignals" class="signal-list"></div><div id="noEmailSignals" class="empty-inline">No common urgency, credential-request or prize-bait patterns detected.</div></article>
+          <p class="disclaimer" id="analysisNote"></p>
+        </section>
+      </section>
+      {% elif active_page == "urls" %}
+      <section class="page-content">
+        <div class="page-heading"><p class="eyebrow">LINK DEFENSE <span> / </span> URL SCANNER</p><h1>Inspect before <span>you click.</span></h1><p class="lead">Evaluate a URL or triage a batch with explainable lexical risk indicators.</p></div>
+        <div class="scanner-grid">
+          <section class="panel scanner-panel">
+            <div class="panel-heading"><div><p class="eyebrow">SINGLE SCAN</p><h2>Check a URL</h2></div><span class="panel-index">01</span></div>
+            <label class="field-label" for="urlInput">URL OR DOMAIN</label>
+            <div class="input-action"><input id="urlInput" type="text" inputmode="url" placeholder="https://example.com/account" autocomplete="url"><button class="button button-primary" id="urlBtn" type="button">Scan <span>→</span></button></div>
+            <p class="field-hint">Known services such as Google and YouTube are recognized by exact hostname boundaries.</p>
+            <div id="urlError" class="inline-error hidden" role="alert"></div><div id="urlResult" class="url-single-result hidden" aria-live="polite"></div>
+          </section>
+          <section class="panel scanner-panel">
+            <div class="panel-heading"><div><p class="eyebrow">BATCH TRIAGE</p><h2>Scan multiple URLs</h2></div><span class="panel-index">02</span></div>
+            <label class="field-label" for="batchUrls">ONE URL PER LINE <span>· UP TO 50</span></label>
+            <textarea id="batchUrls" rows="5" placeholder="https://www.youtube.com/&#10;https://www.google.com/maps&#10;paypa1-secure-login.example/verify"></textarea>
+            <div class="form-footer"><span class="field-hint">No links are opened or fetched by this tool.</span><button class="button button-secondary" id="batchBtn" type="button">Scan list <span>→</span></button></div>
+            <div id="batchError" class="inline-error hidden" role="alert"></div><div id="batchResult" class="batch-results hidden" aria-live="polite"></div>
+          </section>
+        </div>
+        <div class="notice-strip"><span>!</span><p><strong>Static analysis only.</strong> This scanner does not visit links, check live reputation feeds, or resolve redirects. A low score does not mean a URL is safe.</p><a href="{{ url_for('model_lab') }}">How scoring works →</a></div>
+      </section>
+      {% elif active_page == "security" %}
+      <section class="page-content">
+        <div class="page-heading"><p class="eyebrow">PERSONAL DEFENSE <span> / </span> SECURITY CENTER</p><h1>Build better <span>security habits.</span></h1><p class="lead">A private password checkup and practical defenses against common email threats.</p></div>
+        <div class="security-grid">
+          <section class="panel password-panel">
+            <div class="panel-heading"><div><p class="eyebrow">PRIVATE CHECKUP</p><h2>Password strength</h2></div><span class="privacy-tag"><i></i> BROWSER ONLY</span></div>
+            <p class="field-hint password-intro">Type a sample to see general strength feedback. Your input stays in this browser and is never sent to the server.</p>
+            <label class="field-label" for="passwordInput">SAMPLE PASSWORD</label>
+            <div class="input-action"><input id="passwordInput" type="password" autocomplete="new-password" placeholder="Enter a sample password"><button class="button button-secondary" id="togglePassword" type="button" aria-label="Show password">Show</button></div>
+            <div id="passwordFeedback" class="password-feedback" aria-live="polite"><span class="meter"><i id="passwordMeter"></i></span><strong id="passwordScore">Waiting for input</strong><ul id="passwordTips"><li>Use a unique passphrase of 15+ characters.</li></ul></div>
+            <p class="disclaimer">This lightweight estimate is educational—not a password cracking test. Never type a real password into an unfamiliar website.</p>
+          </section>
+          <section class="panel checklist-panel">
+            <div class="panel-heading"><div><p class="eyebrow">PHISHING RESILIENCE</p><h2>Before you trust a message</h2></div></div>
+            <div class="check-row"><span>01</span><div><strong>Verify the sender independently</strong><p>Inspect the full address. Contact the person or organization using a known channel.</p></div></div>
+            <div class="check-row"><span>02</span><div><strong>Preview the real link destination</strong><p>Check the hostname carefully. HTTPS encrypts a connection; it does not prove a site is trustworthy.</p></div></div>
+            <div class="check-row"><span>03</span><div><strong>Resist urgency and unexpected rewards</strong><p>Pause on threats, payment demands, password requests and too-good-to-be-true prizes.</p></div></div>
+            <div class="check-row"><span>04</span><div><strong>Use MFA and a password manager</strong><p>Unique passwords limit reuse risk; phishing-resistant passkeys or security keys are stronger where supported.</p></div></div>
+            <div class="check-row"><span>05</span><div><strong>Report suspicious messages</strong><p>Use your organization's reporting process. Do not forward a suspicious link by clicking it.</p></div></div>
+          </section>
+        </div>
+        <div class="notice-strip"><span>i</span><p><strong>Found a suspicious email?</strong> Analyze its text in the Email Analyzer, but remove personal data first. No tool can guarantee a message is harmless.</p><a href="{{ url_for('email_analyzer') }}">Open analyzer →</a></div>
+      </section>
+      {% else %}
+      <section class="page-content">
+        <div class="page-heading"><p class="eyebrow">TRANSPARENCY <span> / </span> MODEL LAB</p><h1>Know how the <span>models think.</span></h1><p class="lead">Training datasets, held-out evaluation metrics and feature importance at a glance.</p></div>
+        <div id="modelLoading" class="panel loading-state">Loading model and dataset details…</div>
+        <div id="modelError" class="inline-error hidden" role="alert"></div>
+        <div id="modelContent" class="hidden">
+          <div class="model-grid" id="modelCards"></div>
+          <section class="panel dataset-panel"><div class="panel-heading"><div><p class="eyebrow">TRAINING DATA</p><h2>Dataset cards</h2></div><span class="panel-index">INCLUDED DATA · LOCAL ARTIFACTS</span></div><div id="datasetCards" class="dataset-grid"></div></section>
+          <section class="panel feature-panel"><div class="panel-heading"><div><p class="eyebrow">URL MODEL</p><h2>Most influential features</h2></div></div><div id="featureList" class="feature-list"></div></section>
+          <div class="notice-strip"><span>!</span><p id="modelNote"></p></div>
+        </div>
+      </section>
+      {% endif %}
+    </main>
+  </div>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
