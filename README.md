@@ -98,3 +98,9 @@ Run the test suite from the project directory:
 Do not enter real credentials, confidential messages, or sensitive URLs, especially on a shared computer. Password-strength feedback is calculated in the browser. The URL scanner does not visit the submitted URLs.
 
 The Flask development server is intended for local demos and coursework, not production deployment.
+
+
+<img width="1897" height="906" alt="image" src="https://github.com/user-attachments/assets/c4d25af4-9c1c-4f1b-a7a5-664fd3929dab" />
+<img width="1897" height="906" alt="image" src="https://github.com/user-attachments/assets/1633a77f-8556-4fa2-a769-bec6a74fafa8" />
+<img width="1897" height="906" alt="image" src="https://github.com/user-attachments/assets/0d8183a3-a825-48c7-9a8a-30e4c86b4793" />
+<img width="1897" height="906" alt="image" src="https://github.com/user-attachments/assets/38dff91c-3faa-40ad-9909-6587ad0400b4" />
